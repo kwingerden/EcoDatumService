@@ -13,8 +13,28 @@ import Foundation
 
 public extension NotebookEntity {
     
-    public enum ServiceError: Error {
-
+    public static var names: [String] {
+        guard let names = try? NotebookEntity.all().map({$0.name}).filter({$0 != nil}).map({$0!}) else {
+            return []
+        }
+        return names
+    }
+    
+    
+    public static func fromModel(notebook: Notebook) throws -> NotebookEntity {
+        let notebookEntity = try new(
+            id: notebook.id,
+            name: notebook.name,
+            createdDate: notebook.createdDate,
+            updatedDate: notebook.updatedDate)
+        
+        if let sites = notebook.sites {
+            for site in sites {
+                notebookEntity.sites?.adding(SiteEntity.fromModel(site))
+            }
+        }
+        
+        return notebookEntity
     }
     
     public func toModel() throws -> Notebook {
@@ -31,17 +51,10 @@ public extension NotebookEntity {
             }
         }
         
-        if siteModels.count == 0 {
-            return Notebook(id: id!,
-                            name: name!,
-                            createdDate: createdDate!,
-                            updatedDate: updatedDate!)
-        } else {
-            return Notebook(id: id!,
-                            name: name!,
-                            createdDate: createdDate!,
-                            updatedDate: updatedDate!,
-                            sites: siteModels)
-        }
+        return Notebook(id: id!,
+                        name: name!,
+                        createdDate: createdDate!,
+                        updatedDate: updatedDate!,
+                        sites: siteModels.isEmpty ? nil : siteModels)
     }
 }

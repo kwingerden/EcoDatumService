@@ -13,7 +13,6 @@
 		BE4BF6E022400B1600AAE0DA /* EcoDatumCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE4BF6DF22400B1600AAE0DA /* EcoDatumCommon.framework */; };
 		BE4BF6E222400B1600AAE0DA /* EcoDatumCoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE4BF6E122400B1600AAE0DA /* EcoDatumCoreData.framework */; };
 		BE4BF6E422400B1600AAE0DA /* EcoDatumModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE4BF6E322400B1600AAE0DA /* EcoDatumModel.framework */; };
-		BE4BF6E622400B5B00AAE0DA /* NotebookService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE4BF6E522400B5B00AAE0DA /* NotebookService.swift */; };
 		BE4BF6E82240283300AAE0DA /* Notebook.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE4BF6E72240283300AAE0DA /* Notebook.swift */; };
 		BE4BF6EA22402AE300AAE0DA /* NotebookEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE4BF6E922402AE300AAE0DA /* NotebookEntity.swift */; };
 		BE4BF6EC22404DF500AAE0DA /* EcoDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE4BF6EB22404DF500AAE0DA /* EcoDatum.swift */; };
@@ -42,7 +41,6 @@
 		BE4BF6DF22400B1600AAE0DA /* EcoDatumCommon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EcoDatumCommon.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE4BF6E122400B1600AAE0DA /* EcoDatumCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EcoDatumCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE4BF6E322400B1600AAE0DA /* EcoDatumModel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EcoDatumModel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		BE4BF6E522400B5B00AAE0DA /* NotebookService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookService.swift; sourceTree = "<group>"; };
 		BE4BF6E72240283300AAE0DA /* Notebook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notebook.swift; sourceTree = "<group>"; };
 		BE4BF6E922402AE300AAE0DA /* NotebookEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookEntity.swift; sourceTree = "<group>"; };
 		BE4BF6EB22404DF500AAE0DA /* EcoDatum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EcoDatum.swift; sourceTree = "<group>"; };
@@ -97,7 +95,6 @@
 			children = (
 				BE4BF6C322400A6500AAE0DA /* EcoDatumService.h */,
 				BE4BF6C422400A6500AAE0DA /* Info.plist */,
-				BE4BF6E522400B5B00AAE0DA /* NotebookService.swift */,
 				BE4BF6E72240283300AAE0DA /* Notebook.swift */,
 				BE4BF6E922402AE300AAE0DA /* NotebookEntity.swift */,
 				BE4BF6EB22404DF500AAE0DA /* EcoDatum.swift */,
@@ -237,7 +234,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				BE4BF6E82240283300AAE0DA /* Notebook.swift in Sources */,
-				BE4BF6E622400B5B00AAE0DA /* NotebookService.swift in Sources */,
 				BE4BF6EE22404E2700AAE0DA /* EcoDatumEntity.swift in Sources */,
 				BE4BF6EA22402AE300AAE0DA /* NotebookEntity.swift in Sources */,
 				BE4BF6F222404E5E00AAE0DA /* SiteEntity.swift in Sources */,
