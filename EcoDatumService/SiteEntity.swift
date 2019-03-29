@@ -6,14 +6,24 @@
 //  Copyright © 2019 Kenneth Wingerden. All rights reserved.
 //
 
+import CoreData
 import EcoDatumCommon
 import EcoDatumCoreData
 import EcoDatumModel
 import Foundation
-import os
 
 public extension SiteEntity {
     
+    public static func names(_ context: NSManagedObjectContext, in notebook: String) throws -> [String] {
+        let request: NSFetchRequest<SiteEntity> = SiteEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "notebook.name ==[c] %@", argumentArray: [notebook])
+        request.includesSubentities = false
+        request.propertiesToFetch = ["name"]
+        let result = try context.fetch(request)
+        return result.map({$0.name!})
+    }
+    
+    /*
     public static func fromModel(site: Site) throws -> SiteEntity {
     
     }
@@ -57,5 +67,6 @@ public extension SiteEntity {
                     location: location,
                     ecoData: ecoDatumModels.isEmpty ? nil : ecoDatumModels)
     }
+ */
     
 }

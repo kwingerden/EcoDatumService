@@ -13,6 +13,7 @@ import Foundation
 
 extension Notebook {
     
+    /*
     func delete() throws -> Bool {
         if let notebook = try NotebookEntity.find(by: name) {
             notebook.delete()
@@ -21,5 +22,6 @@ extension Notebook {
         assertionFailure("Failed to find persisted Notebook: \(name)")
         return false
     }
+ */
     
 }
