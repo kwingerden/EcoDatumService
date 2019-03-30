@@ -14,13 +14,72 @@ import Foundation
 
 public extension SiteEntity {
     
-    public static func names(_ context: NSManagedObjectContext, in notebook: String) throws -> [String] {
+    public enum EntityError: Error {
+        case NotebookDoesNotExist(name: String)
+        case NameAlreadyExists(name: String)
+    }
+    
+    public static func new(_ context: NSManagedObjectContext, with siteName: String, in notebookName: String) throws -> SiteEntity {
+        guard let notebook = try NotebookEntity.find(context, with: notebookName) else {
+            throw EntityError.NotebookDoesNotExist(name: notebookName)
+        }
+        
+        if try exists(context, with: siteName, in: notebookName) {
+            throw EntityError.NameAlreadyExists(name: siteName)
+        }
+        
+        let site = SiteEntity(context: context)
+        site.id = UUID()
+        site.name = siteName
+        site.createdDate = Date()
+        site.updatedDate = Date()
+        site.notebook = notebook
+        return site
+    }
+    
+    public static func exists(_ context: NSManagedObjectContext, with siteName: String, in notebookName: String) throws -> Bool {
         let request: NSFetchRequest<SiteEntity> = SiteEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "notebook.name ==[c] %@", argumentArray: [notebook])
+        request.predicate = NSPredicate(format: "name ==[c] %@ AND notebook.name ==[c] %@", argumentArray: [siteName, notebookName])
+        request.fetchLimit = 1
+        request.includesSubentities = false
+        return try context.count(for: request) == 1
+    }
+    
+    public static func find(_ context: NSManagedObjectContext, with siteName: String, in notebookName: String) throws -> SiteEntity? {
+        let request: NSFetchRequest<SiteEntity> = SiteEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "name ==[c] %@ AND notebook.name ==[c] %@", argumentArray: [siteName, notebookName])
+        request.fetchLimit = 1
+        request.includesSubentities = false
+        let result = try context.fetch(request)
+        if result.count == 1 {
+            return result[0]
+        }
+        return nil
+    }
+    
+    public static func count(_ context: NSManagedObjectContext, in notebookName: String) throws -> Int {
+        let request: NSFetchRequest<SiteEntity> = SiteEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "notebook.name ==[c] %@", argumentArray: [notebookName])
+        request.includesSubentities = false
+        return try context.count(for: request)
+    }
+    
+    public static func names(_ context: NSManagedObjectContext, in notebookName: String) throws -> [String] {
+        let request: NSFetchRequest<SiteEntity> = SiteEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "notebook.name ==[c] %@", argumentArray: [notebookName])
+        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         request.includesSubentities = false
         request.propertiesToFetch = ["name"]
         let result = try context.fetch(request)
         return result.map({$0.name!})
+    }
+    
+    public func save() throws {
+        try managedObjectContext?.save()
+    }
+    
+    public func delete() {
+        managedObjectContext?.delete(self)
     }
     
     /*

@@ -14,7 +14,17 @@ import Foundation
 
 public extension NotebookEntity {
     
-    public static func new(_ context: NSManagedObjectContext, name: String? = nil) -> NotebookEntity {
+    public enum EntityError: Error {
+        case NameAlreadyExists(name: String)
+    }
+    
+    public static let DEFAULT_NOTEBOOK_NAME = "Default"
+    
+    public static func new(_ context: NSManagedObjectContext, name: String = DEFAULT_NOTEBOOK_NAME) throws -> NotebookEntity {
+        if try exists(context, with: name) {
+            throw EntityError.NameAlreadyExists(name: name)
+        }
+        
         let notebook = NotebookEntity(context: context)
         notebook.id = UUID()
         notebook.name = name
@@ -51,6 +61,7 @@ public extension NotebookEntity {
     
     public static func names(_ context: NSManagedObjectContext) throws -> [String] {
         let request: NSFetchRequest<NotebookEntity> = NotebookEntity.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         request.includesSubentities = false
         request.propertiesToFetch = ["name"]
         let result = try context.fetch(request)
