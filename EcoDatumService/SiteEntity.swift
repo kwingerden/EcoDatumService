@@ -33,7 +33,9 @@ public extension SiteEntity {
         site.name = siteName
         site.createdDate = Date()
         site.updatedDate = Date()
-        site.notebook = notebook
+        
+        notebook.addToSites(site)
+        
         return site
     }
     

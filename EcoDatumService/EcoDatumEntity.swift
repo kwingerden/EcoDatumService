@@ -6,12 +6,97 @@
 //  Copyright © 2019 Kenneth Wingerden. All rights reserved.
 //
 
+import CoreData
 import EcoDatumCommon
 import EcoDatumCoreData
 import EcoDatumModel
 import Foundation
 
 public extension EcoDatumEntity {
+    
+    public enum EntityError: Error {
+        case NotebookDoesNotExist(name: String)
+        case SiteDoesNotExist(name: String)
+        case EcoDatumIsNotValid(description: String)
+    }
+    
+    public static func new(_ context: NSManagedObjectContext,
+                           with siteName: String,
+                           in notebookName: String,
+                           ecoDatum: EcoDatum) throws -> EcoDatumEntity {
+        guard try NotebookEntity.exists(context, with: notebookName) else {
+            throw EntityError.NotebookDoesNotExist(name: notebookName)
+        }
+        
+        guard let site = try SiteEntity.find(context, with: siteName, in: notebookName) else {
+            throw EntityError.SiteDoesNotExist(name: siteName)
+        }
+        
+        guard ecoDatum.isValid else {
+            throw EntityError.EcoDatumIsNotValid(description: ecoDatum.description)
+        }
+        
+        let ecoDatumEntity = EcoDatumEntity(context: context)
+        ecoDatumEntity.id = ecoDatum.id
+        ecoDatumEntity.createdDate = Date()
+        ecoDatumEntity.updatedDate = Date()
+        
+        ecoDatumEntity.collectionDate = ecoDatum.collectionDate
+        ecoDatumEntity.primaryType = ecoDatum.primaryType.rawValue
+        ecoDatumEntity.secondaryType = ecoDatum.secondaryType.rawValue
+        ecoDatumEntity.dataType = ecoDatum.dataType.rawValue
+        ecoDatumEntity.dataUnit = ecoDatum.dataUnit?.rawValue ?? nil
+        ecoDatumEntity.dataValue = ecoDatum.dataValue.data(using: .utf8)
+        
+        site.addToEcoData(ecoDatumEntity)
+        
+        return ecoDatumEntity
+    }
+    
+    public static func first(_ context: NSManagedObjectContext,
+                            with siteName: String,
+                            in notebookName: String,
+                            with primaryType: PrimaryType,
+                            with secondaryType: SecondaryType,
+                            with dataType: DataType) throws -> EcoDatumEntity? {
+        guard try NotebookEntity.exists(context, with: notebookName) else {
+            throw EntityError.NotebookDoesNotExist(name: notebookName)
+        }
+        
+        guard let site = try SiteEntity.find(context, with: siteName, in: notebookName) else {
+            throw EntityError.SiteDoesNotExist(name: siteName)
+        }
+        
+        let request: NSFetchRequest<EcoDatumEntity> = EcoDatumEntity.fetchRequest()
+        request.predicate = NSPredicate(
+            format: """
+                site.id == %@ AND
+                primaryType == %@ AND
+                secondaryType == %@ AND
+                dataType == %@
+                """,
+            argumentArray: [
+                site.id!.uuidString,
+                primaryType.rawValue,
+                secondaryType.rawValue,
+                dataType.rawValue])
+        request.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: false)]
+        request.fetchLimit = 1
+        //request.includesSubentities = false
+        let result = try context.fetch(request)
+        if result.count == 1 {
+            return result[0]
+        }
+        return nil
+    }
+    
+    public func save() throws {
+        try managedObjectContext?.save()
+    }
+    
+    public func delete() {
+        managedObjectContext?.delete(self)
+    }
     
     public func toModel() throws -> EcoDatum {
         assert(id != nil)

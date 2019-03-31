@@ -20,7 +20,8 @@ public extension NotebookEntity {
     
     public static let DEFAULT_NOTEBOOK_NAME = "Default"
     
-    public static func new(_ context: NSManagedObjectContext, name: String = DEFAULT_NOTEBOOK_NAME) throws -> NotebookEntity {
+    public static func new(_ context: NSManagedObjectContext,
+                           name: String = DEFAULT_NOTEBOOK_NAME) throws -> NotebookEntity {
         if try exists(context, with: name) {
             throw EntityError.NameAlreadyExists(name: name)
         }
