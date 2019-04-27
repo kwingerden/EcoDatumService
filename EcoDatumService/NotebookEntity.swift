@@ -13,11 +13,7 @@ import EcoDatumModel
 import Foundation
 
 public extension NotebookEntity {
-    
-    public enum EntityError: Error {
-        case NameAlreadyExists(name: String)
-    }
-    
+        
     public static let DEFAULT_NOTEBOOK_NAME = "Default"
     
     public static func new(_ context: NSManagedObjectContext,

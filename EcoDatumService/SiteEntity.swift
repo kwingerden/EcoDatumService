@@ -14,14 +14,13 @@ import Foundation
 
 public extension SiteEntity {
     
-    public enum EntityError: Error {
+    public enum ServiceError: Error {
         case NotebookDoesNotExist(name: String)
-        case NameAlreadyExists(name: String)
     }
     
     public static func new(_ context: NSManagedObjectContext, with siteName: String, in notebookName: String) throws -> SiteEntity {
         guard let notebook = try NotebookEntity.find(context, with: notebookName) else {
-            throw EntityError.NotebookDoesNotExist(name: notebookName)
+            throw ServiceError.NotebookDoesNotExist(name: notebookName)
         }
         
         if try exists(context, with: siteName, in: notebookName) {

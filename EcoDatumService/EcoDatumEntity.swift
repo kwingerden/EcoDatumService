@@ -14,7 +14,7 @@ import Foundation
 
 public extension EcoDatumEntity {
     
-    public enum EntityError: Error {
+    public enum ServiceError: Error {
         case NotebookDoesNotExist(name: String)
         case SiteDoesNotExist(name: String)
         case EcoDatumIsNotValid(description: String)
@@ -25,15 +25,15 @@ public extension EcoDatumEntity {
                            in notebookName: String,
                            ecoDatum: EcoDatum) throws -> EcoDatumEntity {
         guard try NotebookEntity.exists(context, with: notebookName) else {
-            throw EntityError.NotebookDoesNotExist(name: notebookName)
+            throw ServiceError.NotebookDoesNotExist(name: notebookName)
         }
         
         guard let site = try SiteEntity.find(context, with: siteName, in: notebookName) else {
-            throw EntityError.SiteDoesNotExist(name: siteName)
+            throw ServiceError.SiteDoesNotExist(name: siteName)
         }
         
         guard ecoDatum.isValid else {
-            throw EntityError.EcoDatumIsNotValid(description: ecoDatum.description)
+            throw ServiceError.EcoDatumIsNotValid(description: ecoDatum.description)
         }
         
         let ecoDatumEntity = EcoDatumEntity(context: context)
@@ -54,17 +54,17 @@ public extension EcoDatumEntity {
     }
     
     public static func first(_ context: NSManagedObjectContext,
-                            with siteName: String,
-                            in notebookName: String,
-                            with primaryType: PrimaryType,
-                            with secondaryType: SecondaryType,
-                            with dataType: DataType) throws -> EcoDatumEntity? {
+                             in notebookName: String,
+                             in siteName: String,
+                             with primaryType: PrimaryType,
+                             with secondaryType: SecondaryType,
+                             with dataType: DataType) throws -> EcoDatumEntity? {
         guard try NotebookEntity.exists(context, with: notebookName) else {
-            throw EntityError.NotebookDoesNotExist(name: notebookName)
+            throw ServiceError.NotebookDoesNotExist(name: notebookName)
         }
         
         guard let site = try SiteEntity.find(context, with: siteName, in: notebookName) else {
-            throw EntityError.SiteDoesNotExist(name: siteName)
+            throw ServiceError.SiteDoesNotExist(name: siteName)
         }
         
         let request: NSFetchRequest<EcoDatumEntity> = EcoDatumEntity.fetchRequest()
@@ -128,7 +128,7 @@ public extension EcoDatumEntity {
                 ecoDataModels.append(try ecoDatumEntity.toModel())
             }
         }
-
+        
         return EcoDatum(id: id!,
                         createdDate: createdDate!,
                         updatedDate: updatedDate!,
