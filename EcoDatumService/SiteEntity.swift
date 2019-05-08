@@ -83,6 +83,21 @@ public extension SiteEntity {
         managedObjectContext?.delete(self)
     }
     
+    public func model() throws -> Site {
+        assert(id != nil)
+        assert(name != nil)
+        assert(createdDate != nil)
+        assert(updatedDate != nil)
+        return Site(id: id!,
+                    name: name!,
+                    createdDate: createdDate!,
+                    updatedDate: updatedDate!,
+                    location: location?.model(),
+                    ecoData: try ecoData().map { (ecoDatum: EcoDatumEntity) in
+                        return try ecoDatum.model()
+            })
+    }
+    
     /*
     public static func fromModel(site: Site) throws -> SiteEntity {
     

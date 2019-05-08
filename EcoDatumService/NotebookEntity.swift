@@ -73,6 +73,21 @@ public extension NotebookEntity {
         managedObjectContext?.delete(self)
     }
     
+    public func model() throws -> Notebook {
+        assert(id != nil)
+        assert(name != nil)
+        assert(createdDate != nil)
+        assert(updatedDate != nil)
+        assert(sites != nil)
+        return Notebook(id: id!,
+                    name: name!,
+                    createdDate: createdDate!,
+                    updatedDate: updatedDate!,
+                    sites: try sites().map { (site: SiteEntity) in
+                        return try site.model()
+            })
+    }
+    
     /*
     public static var names: [String] {
         guard let names = try? NotebookEntity.all().map({$0.name}).filter({$0 != nil}).map({$0!}) else {

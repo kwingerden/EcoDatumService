@@ -98,7 +98,7 @@ public extension EcoDatumEntity {
         managedObjectContext?.delete(self)
     }
     
-    public func toModel() throws -> EcoDatum {
+    public func model() throws -> EcoDatum {
         assert(id != nil)
         assert(createdDate != nil)
         assert(updatedDate != nil)
@@ -125,7 +125,7 @@ public extension EcoDatumEntity {
         if let children = children {
             for child in children {
                 let ecoDatumEntity = child as! EcoDatumEntity
-                ecoDataModels.append(try ecoDatumEntity.toModel())
+                ecoDataModels.append(try ecoDatumEntity.model())
             }
         }
         
